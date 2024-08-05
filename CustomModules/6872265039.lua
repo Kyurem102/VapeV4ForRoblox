@@ -40,7 +40,7 @@ for _, v in pairs(_G.gc) do
 end
 
 function requireV2(obj)
-    if typeof(obj) == "Instance" and obj:IsA("ModuleScript") then
+    if typeof(obj) == "Instance" and obj:IsA("ModuleScript") or not obj then
         return setmetatable({}, {
             __index = function(obj, key)
                 if _G.gc then
