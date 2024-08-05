@@ -1179,6 +1179,14 @@ run(function()
 	        end
 	    end
 	end
+	if Flamework then
+	    for _, v in pairs(Flamework) do
+	        if type(v) == "table" and rawget(v, "Flamework") and rawget(v.Flamework, "resolveDependency") then
+	            Flamework = v
+	            break
+	        end
+	    end
+	end
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local InventoryUtil = require(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
 	local OldGet = getmetatable(Client).Get
