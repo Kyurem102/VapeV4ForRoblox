@@ -218,8 +218,23 @@ runcode(function()
     local flaggedremotes = {"SelfReport"}
 
     getfunctions = function()
-        local Flamework = require(repstorage["rbxts_include"]["node_modules"]["@flamework"].core.out).Flamework
-		repeat task.wait() until Flamework.isInitialized
+        if not _G.gc then
+		_G.gc = getgc(true)
+	end
+	for _, v in pairs(_G.gc) do
+	    if type(v) == "table" then
+	        for _, v2 in pairs(v) do
+	            if type(v2) == "function" and not iscclosure(v2) then
+	                local inf = debug.getinfo(v2)
+	                if inf.short_src == 'ReplicatedStorage.rbxts_include.node_modules.@flamework.components.out' then
+	                    Flamework = v
+	                    break
+	                end
+	            end
+	        end
+	    end
+	end
+	repeat task.wait() until Flamework.isInitialized
         local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6)
         local Client = require(repstorage.TS.remotes).default.Client
         local OldClientGet = getmetatable(Client).Get
