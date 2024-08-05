@@ -18,6 +18,46 @@ hook = hookmetamethod(game, "__namecall", function(obj, ...)
     return hook(obj, ...)
 end)
 
+repeat task.wait() until game:IsLoaded()
+local GCData = nil
+
+if not _G.gc then
+    _G.gc = getgc(true)
+end
+
+for _, v in pairs(_G.gc) do
+    if type(v) == "table" then
+        for _, v2 in pairs(v) do
+            if type(v2) == "function" and not iscclosure(v2) then
+                local inf = debug.getinfo(v2)
+                if inf.short_src == 'ReplicatedStorage.rbxts_include.node_modules.@flamework.components.out' then
+                    GCData = v
+                    break
+                end
+            end
+        end
+    end
+end
+
+function requireV2(obj)
+    if typeof(obj) == "Instance" and obj:IsA("ModuleScript") then
+        return setmetatable({}, {
+            __index = function(obj, key)
+                if GCData then
+                    for _, v in pairs(GCData) do
+                        if type(v) == "table" and rawget(v, key) then
+                            return v[key]
+                        end
+                    end
+                end
+                return obj[key]
+            end
+        })
+    end
+
+    return require(obj)
+end
+
 local GuiLibrary = shared.GuiLibrary
 local players = game:GetService("Players")
 local textservice = game:GetService("TextService")
@@ -233,47 +273,24 @@ runcode(function()
     local flaggedremotes = {"SelfReport"}
 
     getfunctions = function()
-        if not _G.gc then
-		_G.gc = getgc(true)
-	end
-	for _, v in pairs(_G.gc) do
-	    if type(v) == "table" then
-	        for _, v2 in pairs(v) do
-	            if type(v2) == "function" and not iscclosure(v2) then
-	                local inf = debug.getinfo(v2)
-	                if inf.short_src == 'ReplicatedStorage.rbxts_include.node_modules.@flamework.components.out' then
-	                    Flamework = v
-	                    break
-	                end
-	            end
-	        end
-	    end
-	end
-	if Flamework then
-	    for _, v in pairs(Flamework) do
-	        if type(v) == "table" and rawget(v, "Flamework") and rawget(v.Flamework, "resolveDependency") then
-	            Flamework = v.Flamework
-	            break
-	        end
-	    end
-	end
+        local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	repeat task.wait() until Flamework.isInitialized
-        local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6)
-        local Client = require(repstorage.TS.remotes).default.Client
+        local KnitClient = debug.getupvalue(requireV2(lplr.PlayerScripts.TS.knit).setup, 6)
+        local Client = requireV2(repstorage.TS.remotes).default.Client
         local OldClientGet = getmetatable(Client).Get
 		local OldClientWaitFor = getmetatable(Client).WaitFor
         bedwars = {
-			BedwarsKits = require(repstorage.TS.games.bedwars.kit["bedwars-kit-shop"]).BedwarsKitShop,
+			BedwarsKits = requireV2(repstorage.TS.games.bedwars.kit["bedwars-kit-shop"]).BedwarsKitShop,
             ClientHandler = Client,
-            ClientStoreHandler = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
-			EmoteMeta = require(repstorage.TS.locker.emote["emote-meta"]).EmoteMeta,
-			QueryUtil = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
-			KitMeta = require(repstorage.TS.games.bedwars.kit["bedwars-kit-meta"]).BedwarsKitMeta,
+            ClientStoreHandler = requireV2(lplr.PlayerScripts.TS.ui.store).ClientStore,
+			EmoteMeta = requireV2(repstorage.TS.locker.emote["emote-meta"]).EmoteMeta,
+			QueryUtil = requireV2(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
+			KitMeta = requireV2(repstorage.TS.games.bedwars.kit["bedwars-kit-meta"]).BedwarsKitMeta,
 			LobbyClientEvents = KnitClient.Controllers.QueueController,
             sprintTable = KnitClient.Controllers.SprintController,
-			WeldTable = require(repstorage.TS.util["weld-util"]).WeldUtil,
-			QueueMeta = require(repstorage.TS.game["queue-meta"]).QueueMeta,
-			getEntityTable = require(repstorage.TS.entity["entity-util"]).EntityUtil,
+			WeldTable = requireV2(repstorage.TS.util["weld-util"]).WeldUtil,
+			QueueMeta = requireV2(repstorage.TS.game["queue-meta"]).QueueMeta,
+			getEntityTable = requireV2(repstorage.TS.entity["entity-util"]).EntityUtil,
         }
 		if not shared.vapebypassed then
 			local realremote = repstorage:WaitForChild("GameAnalyticsError")
