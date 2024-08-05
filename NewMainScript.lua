@@ -1,7 +1,7 @@
 if getgenv and not getgenv().shared then getgenv().shared = {} end
 local errorPopupShown = false
 local setidentity = syn and syn.set_thread_identity or set_thread_identity or setidentity or setthreadidentity or function() end
-local getidentity = syn and syn.get_thread_identity or get_thread_identity or getidentity or getthreadidentity or function() return 8 end
+local getidentity = syn and syn.get_thread_identity or get_thread_identity or getidentity or getthreadidentity or function() return 7 end
 local isfile = isfile or function(file)
 	local suc, res = pcall(function() return readfile(file) end)
 	return suc and res ~= nil
@@ -10,7 +10,7 @@ local delfile = delfile or function(file) writefile(file, "") end
 
 local function displayErrorPopup(text, func)
 	local oldidentity = getidentity()
-	setidentity(8)
+	setidentity(7)
 	local ErrorPrompt = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.ErrorPrompt)
 	local prompt = ErrorPrompt.new("Default")
 	prompt._hideErrorCode = true
@@ -38,7 +38,7 @@ local function vapeGithubRequest(scripturl)
 				displayErrorPopup("The connection to github is taking a while, Please be patient.")
 			end
 		end)
-		suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/"..readfile("vape/commithash.txt").."/"..scripturl, true) end)
+		suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/Kyurem102/VapeV4ForRoblox/"..readfile("vape/commithash.txt").."/"..scripturl, true) end)
 		if not suc or res == "404: Not Found" then
 			if identifyexecutor and ({identifyexecutor()})[1] == 'Wave' then 
 				displayErrorPopup('Stop using detected garbage, Vape will not work on such garabge until they fix BOTH HttpGet & file functions.')
