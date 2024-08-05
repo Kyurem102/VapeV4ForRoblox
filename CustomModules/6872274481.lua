@@ -40,7 +40,7 @@ function requireV2(obj)
                 if _G.gc then
                     for _, v in pairs(_G.gc) do
                         if type(v) == "table" and rawget(v, key) ~= nil and type(rawget(v, key)) == "table" then
-                            return v[key]
+                            return rawget(v, key)
                         end
                     end
                 end
