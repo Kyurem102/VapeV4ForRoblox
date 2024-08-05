@@ -280,7 +280,8 @@ runcode(function()
 	for _, v in pairs(_G.gc) do
 	    if type(v) == "table" and (rawget(v, "default") and type(v.default) == "table") and rawget(v.default, "Client") then
 		if getmetatable(v.default.Client) then
-			Client = getmetatable(v.default.Client)
+			Client = v.default.Client
+			break
 		end
 	    end
 	end
