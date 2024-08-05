@@ -1190,13 +1190,13 @@ run(function()
 	local KnitGotten, KnitClient
 	repeat
 		KnitGotten, KnitClient = pcall(function()
-			return requireV2().KnitClient
+			return require().KnitClient
 		end)
 		if KnitGotten then break end
 		task.wait()
 	until KnitGotten
 	repeat task.wait() until debug.getupvalue(KnitClient.Start, 1)
-	local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
+	local Flamework = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	local Client = nil
 	local ReportRemote = nil
 	for _, v in pairs(_G.gc) do
@@ -1212,49 +1212,49 @@ run(function()
 	        ReportRemote = dumpRemote(debug.getconstants(v.default.reportPlayer))
 	    end
 	end
-	local InventoryUtil = requireV2(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
+	local InventoryUtil = require(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
 	local OldGet = getmetatable(Client).Get
 	local OldBreak
 
 	bedwars = setmetatable({
-		AnimationType = requireV2(replicatedStorage.TS.animation["animation-type"]).AnimationType,
-		AnimationUtil = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["animation-util"]).AnimationUtil,
-		AppController = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.controllers["app-controller"]).AppController,
+		AnimationType = require(replicatedStorage.TS.animation["animation-type"]).AnimationType,
+		AnimationUtil = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["animation-util"]).AnimationUtil,
+		AppController = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.controllers["app-controller"]).AppController,
 		AbilityController = Flamework.resolveDependency("@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController"),
 		AbilityUIController = Flamework.resolveDependency("@easy-games/game-core:client/controllers/ability/ability-ui-controller@AbilityUIController"),
 		AttackRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.SwordController.sendServerRequest)),
-		BalanceFile = requireV2(replicatedStorage.TS.balance["balance-file"]).BalanceFile,
-		BasicBlockStore = requireV2(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BasicBlockStore,
+		BalanceFile = require(replicatedStorage.TS.balance["balance-file"]).BalanceFile,
+		BasicBlockStore = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BasicBlockStore,
 		BatteryRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.BatteryController.KnitStart, 1), 1))),
 		BlockBreaker = KnitClient.Controllers.BlockBreakController.blockBreaker,
-		BlockController = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BlockEngine,
-		BlockPlacer = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client.placement["block-placer"]).BlockPlacer,
-		BlockEngine = requireV2(lplr.PlayerScripts.TS.lib["block-engine"]["client-block-engine"]).ClientBlockEngine,
-		BlockEngineClientEvents = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client["block-engine-client-events"]).BlockEngineClientEvents,
+		BlockController = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BlockEngine,
+		BlockPlacer = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client.placement["block-placer"]).BlockPlacer,
+		BlockEngine = require(lplr.PlayerScripts.TS.lib["block-engine"]["client-block-engine"]).ClientBlockEngine,
+		BlockEngineClientEvents = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client["block-engine-client-events"]).BlockEngineClientEvents,
 		BowConstantsTable = debug.getupvalue(KnitClient.Controllers.ProjectileController.enableBeam, 6),
 		CannonAimRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.CannonController.startAiming, 5))),
 		CannonLaunchRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.CannonHandController.launchSelf)),
-		ClickHold = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.ui.lib.util["click-hold"]).ClickHold,
+		ClickHold = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.ui.lib.util["click-hold"]).ClickHold,
 		Client = Client,
-		ClientConstructor = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"].net.out.client),
-		ClientDamageBlock = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.shared.remotes).BlockEngineRemotes.Client,
-		ClientStoreHandler = requireV2(lplr.PlayerScripts.TS.ui.store).ClientStore,
-		CombatConstant = requireV2(replicatedStorage.TS.combat["combat-constant"]).CombatConstant,
-		ConstantManager = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].constant["constant-manager"]).ConstantManager,
+		ClientConstructor = require(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"].net.out.client),
+		ClientDamageBlock = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.shared.remotes).BlockEngineRemotes.Client,
+		ClientStoreHandler = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
+		CombatConstant = require(replicatedStorage.TS.combat["combat-constant"]).CombatConstant,
+		ConstantManager = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].constant["constant-manager"]).ConstantManager,
 		ConsumeSoulRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.GrimReaperController.consumeSoul)),
 		CooldownController = Flamework.resolveDependency("@easy-games/game-core:client/controllers/cooldown/cooldown-controller@CooldownController"),
 		DamageIndicator = KnitClient.Controllers.DamageIndicatorController.spawnDamageIndicator,
-		DefaultKillEffect = requireV2(lplr.PlayerScripts.TS.controllers.game.locker["kill-effect"].effects["default-kill-effect"]),
+		DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.game.locker["kill-effect"].effects["default-kill-effect"]),
 		DropItem = KnitClient.Controllers.ItemDropController.dropItemInHand,
 		DropItemRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.ItemDropController.dropItemInHand)),
 		DragonRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.DragonSlayerController.KnitStart, 2), 1))),
 		EatRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ConsumeController.onEnable, 1))),
-		EquipItemRemote = dumpRemote(debug.getconstants(debug.getproto(requireV2(replicatedStorage.TS.entity.entities["inventory-entity"]).InventoryEntity.equipItem, 3))),
-		EmoteMeta = requireV2(replicatedStorage.TS.locker.emote["emote-meta"]).EmoteMeta,
+		EquipItemRemote = dumpRemote(debug.getconstants(debug.getproto(require(replicatedStorage.TS.entity.entities["inventory-entity"]).InventoryEntity.equipItem, 3))),
+		EmoteMeta = require(replicatedStorage.TS.locker.emote["emote-meta"]).EmoteMeta,
 		ForgeConstants = debug.getupvalue(KnitClient.Controllers.ForgeController.getPurchaseableForgeUpgrades, 2),
 		ForgeUtil = debug.getupvalue(KnitClient.Controllers.ForgeController.getPurchaseableForgeUpgrades, 5),
-		GameAnimationUtil = requireV2(replicatedStorage.TS.animation["animation-util"]).GameAnimationUtil,
-		EntityUtil = requireV2(replicatedStorage.TS.entity["entity-util"]).EntityUtil,
+		GameAnimationUtil = require(replicatedStorage.TS.animation["animation-util"]).GameAnimationUtil,
+		EntityUtil = require(replicatedStorage.TS.entity["entity-util"]).EntityUtil,
 		getIcon = function(item, showinv)
 			local itemmeta = bedwars.ItemTable[item.itemType]
 			if itemmeta and showinv then
@@ -1273,35 +1273,35 @@ run(function()
 			})
 		end,
 		GuitarHealRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.GuitarController.performHeal)),
-		ItemTable = debug.getupvalue(requireV2(replicatedStorage.TS.item["item-meta"]).getItemMeta, 1),
-		KillEffectMeta = requireV2(replicatedStorage.TS.locker["kill-effect"]["kill-effect-meta"]).KillEffectMeta,
-		KnockbackUtil = requireV2(replicatedStorage.TS.damage["knockback-util"]).KnockbackUtil,
+		ItemTable = debug.getupvalue(require(replicatedStorage.TS.item["item-meta"]).getItemMeta, 1),
+		KillEffectMeta = require(replicatedStorage.TS.locker["kill-effect"]["kill-effect-meta"]).KillEffectMeta,
+		KnockbackUtil = require(replicatedStorage.TS.damage["knockback-util"]).KnockbackUtil,
 		MatchEndScreenController = Flamework.resolveDependency("client/controllers/game/match/match-end-screen-controller@MatchEndScreenController"),
 --		MinerRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.MinerController.onKitEnabled, 1))),
 		MageRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.MageController.registerTomeInteraction, 1))),
-		MageKitUtil = requireV2(replicatedStorage.TS.games.bedwars.kit.kits.mage["mage-kit-util"]).MageKitUtil,
+		MageKitUtil = require(replicatedStorage.TS.games.bedwars.kit.kits.mage["mage-kit-util"]).MageKitUtil,
 		PickupMetalRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.MetalDetectorController.KnitStart, 1), 2))),
 		PickupRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.ItemDropController.checkForPickup)),
 		--PinataRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.PiggyBankController.KnitStart, 2), 5))),
 		PinataRemote = '',
-		ProjectileMeta = requireV2(replicatedStorage.TS.projectile["projectile-meta"]).ProjectileMeta,
+		ProjectileMeta = require(replicatedStorage.TS.projectile["projectile-meta"]).ProjectileMeta,
 		ProjectileRemote = dumpRemote(debug.getconstants(debug.getupvalue(KnitClient.Controllers.ProjectileController.launchProjectileWithValues, 2))),
-		QueryUtil = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
-		QueueCard = requireV2(lplr.PlayerScripts.TS.controllers.global.queue.ui["queue-card"]).QueueCard,
-		QueueMeta = requireV2(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
+		QueryUtil = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
+		QueueCard = require(lplr.PlayerScripts.TS.controllers.global.queue.ui["queue-card"]).QueueCard,
+		QueueMeta = require(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
 		ReportRemote = ReportRemote,
 		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
-		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
-		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
-		Shop = requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
-		ShopItems = debug.getupvalue(debug.getupvalue(requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 3),
-		SoundList = requireV2(replicatedStorage.TS.sound["game-sound"]).GameSound,
-		SoundManager = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager,
+		Roact = require(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
+		RuntimeLib = require(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
+		Shop = require(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
+		ShopItems = debug.getupvalue(debug.getupvalue(require(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 3),
+		SoundList = require(replicatedStorage.TS.sound["game-sound"]).GameSound,
+		SoundManager = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager,
 		SpawnRavenRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.RavenController.spawnRaven)),
 		TreeRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.BigmanController.KnitStart, 1), 2))),
 		TrinityRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.AngelController.onKitEnabled, 1))),
-		UILayers = requireV2(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
-		WeldTable = requireV2(replicatedStorage.TS.util["weld-util"]).WeldUtil
+		UILayers = require(replicatedStorage['rbxts_include']['node_modules']['@easy-games']['game-core'].out).UILayers,
+		WeldTable = require(replicatedStorage.TS.util["weld-util"]).WeldUtil
 	}, {
 		__index = function(self, ind)
 			rawset(self, ind, KnitClient.Controllers[ind])
@@ -2605,7 +2605,7 @@ run(function()
 							end
 						end
 					until camcontrol
-					local caminput = requireV2(lplr.PlayerScripts.PlayerModule.CameraModule.CameraInput)
+					local caminput = require(lplr.PlayerScripts.PlayerModule.CameraModule.CameraInput)
 					local num = Instance.new("IntValue")
 					local numanim
 					shared.damageanim = function()
@@ -4609,7 +4609,7 @@ run(function()
 			if callback then
 				task.spawn(function()
 					if not controlmodule then
-						local suc = pcall(function() controlmodule = requireV2(lplr.PlayerScripts.PlayerModule).controls end)
+						local suc = pcall(function() controlmodule = require(lplr.PlayerScripts.PlayerModule).controls end)
 						if not suc then controlmodule = {} end
 					end
 					oldmove = controlmodule.moveFunction
@@ -5106,7 +5106,7 @@ run(function()
 				if oldhitpart then
 					bedwars.DamageIndicatorController.hitEffectPart = oldhitpart
 				end
-				debug.setupvalue(bedwars.KillEffectController.KnitStart, 2, requireV2(lplr.PlayerScripts.TS["client-sync-events"]).ClientSyncEvents)
+				debug.setupvalue(bedwars.KillEffectController.KnitStart, 2, require(lplr.PlayerScripts.TS["client-sync-events"]).ClientSyncEvents)
 				damagetab.strokeThickness = 1.5
 				damagetab.textSize = 28
 				damagetab.blowUpDuration = 0.125
@@ -5440,7 +5440,7 @@ run(function()
 						return tweenService:Create(obj, ...)
 					end
 				})
-				debug.setconstant(requireV2(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 4653055)
+				debug.setconstant(require(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 4653055)
 			end)
 			task.spawn(function()
 				local snowpart = Instance.new("Part")
@@ -5527,7 +5527,7 @@ run(function()
 				colorcorrection.TintColor = Color3.fromRGB(255, 185, 81)
 				colorcorrection.Brightness = 0.05
 				colorcorrection.Parent = lightingService
-				debug.setconstant(requireV2(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 16737280)
+				debug.setconstant(require(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 16737280)
 			end)
 		end,
 		Valentines = function()
@@ -5578,7 +5578,7 @@ run(function()
 				colorcorrection.TintColor = Color3.fromRGB(255, 199, 220)
 				colorcorrection.Brightness = 0.05
 				colorcorrection.Parent = lightingService
-				debug.setconstant(requireV2(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 16745650)
+				debug.setconstant(require(lplr.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar.render, 16, 16745650)
 			end)
 		end
 	}
@@ -6422,10 +6422,10 @@ run(function()
 			if callback and not performed then
 				performed = true
 				task.spawn(function()
-					local hotbar = requireV2(lplr.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"]).HotbarApp
-					local hotbaropeninv = requireV2(lplr.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-open-inventory"]).HotbarOpenInventory
-					local topbarbutton = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).TopBarButton
-					local gametheme = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.shared.ui["game-theme"]).GameTheme
+					local hotbar = require(lplr.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"]).HotbarApp
+					local hotbaropeninv = require(lplr.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-open-inventory"]).HotbarOpenInventory
+					local topbarbutton = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).TopBarButton
+					local gametheme = require(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.shared.ui["game-theme"]).GameTheme
 					bedwars.AppController:closeApp("TopBarApp")
 					local oldrender = topbarbutton.render
 					topbarbutton.render = function(self)
@@ -8596,7 +8596,7 @@ end)
 
 
 run(function()
-	local controlmodule = requireV2(lplr.PlayerScripts.PlayerModule).controls
+	local controlmodule = require(lplr.PlayerScripts.PlayerModule).controls
 	local oldmove
 	local SafeWalk = {Enabled = false}
 	local SafeWalkMode = {Value = "Optimized"}
