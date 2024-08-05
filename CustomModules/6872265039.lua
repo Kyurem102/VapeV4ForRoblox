@@ -276,8 +276,15 @@ runcode(function()
         local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	repeat task.wait() until Flamework.isInitialized
         local KnitClient = requireV2().KnitClient
-        local Client = requireV2(repstorage.TS.remotes).default.Client
-        local OldClientGet = getmetatable(Client).GetEvent
+        local Client = nil
+	for _, v in pairs(_G.gc) do
+	    if type(v) == "table" and (rawget(v, "default") and type(v.default) == "table") and rawget(v.default, "Client") then
+		if getmetatable(v.default.Client) then
+			Client = v.default.Client
+		end
+	    end
+	end
+        local OldClientGet = getmetatable(Client).Get
 		local OldClientWaitFor = getmetatable(Client).WaitFor
         bedwars = {
 			BedwarsKits = requireV2(repstorage.TS.games.bedwars.kit["bedwars-kit-shop"]).BedwarsKitShop,
@@ -600,10 +607,10 @@ runcode(function()
 					for i = 1, #tab do
 						local v = tab[i]
 						if ownedkits[v:lower()] then
-							bedwars["ClientHandler"]:GetEvent("BedwarsActivateKit"):CallServerAsync({
+							bedwars["ClientHandler"]:Get("BedwarsActivateKit"):CallServerAsync({
 								kit = ownedkits[v:lower()]
 							})
-							bedwars["ClientHandler"]:GetEvent("BedwarsSetUseKitSkin"):CallServerAsync({
+							bedwars["ClientHandler"]:Get("BedwarsSetUseKitSkin"):CallServerAsync({
 								useKitSkin = tab2[i] and true or false
 							})
 							return
@@ -614,10 +621,10 @@ runcode(function()
 					for i2,v2 in pairs(ownedkits) do
 						ownedkitsnum = ownedkitsnum + 1
 						if ownedkitsnum == rand then
-							bedwars["ClientHandler"]:GetEvent("BedwarsActivateKit"):CallServerAsync({
+							bedwars["ClientHandler"]:Get("BedwarsActivateKit"):CallServerAsync({
 								kit = v2
 							})
-							bedwars["ClientHandler"]:GetEvent("BedwarsSetUseKitSkin"):CallServerAsync({
+							bedwars["ClientHandler"]:Get("BedwarsSetUseKitSkin"):CallServerAsync({
 								useKitSkin = false
 							})
 						end
