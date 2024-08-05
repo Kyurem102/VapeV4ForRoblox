@@ -249,6 +249,14 @@ runcode(function()
 	        end
 	    end
 	end
+	if Flamework then
+	    for _, v in pairs(Flamework) do
+	        if type(v) == "table" and rawget(v, "Flamework") and rawget(v.Flamework, "resolveDependency") then
+	            Flamework = v
+	            break
+	        end
+	    end
+	end
 	repeat task.wait() until Flamework.isInitialized
         local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6)
         local Client = require(repstorage.TS.remotes).default.Client
