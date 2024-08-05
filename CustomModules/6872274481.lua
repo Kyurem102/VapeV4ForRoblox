@@ -477,7 +477,7 @@ end))
 
 local function getPlacedBlock(pos)
 	local roundedPosition = bedwars.BlockController:getBlockPosition(pos)
-	return bedwars.BlockController:getStore():getBlockAt(roundedPosition), roundedPosition
+	return bedwars.BasicBlockStore:getBlockAt(roundedPosition), roundedPosition
 end
 
 local oldpos = Vector3.zero
@@ -1224,6 +1224,7 @@ run(function()
 		AbilityUIController = Flamework.resolveDependency("@easy-games/game-core:client/controllers/ability/ability-ui-controller@AbilityUIController"),
 		AttackRemote = dumpRemote(debug.getconstants(KnitClient.Controllers.SwordController.sendServerRequest)),
 		BalanceFile = requireV2(replicatedStorage.TS.balance["balance-file"]).BalanceFile,
+		BasicBlockStore = requireV2(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BasicBlockStore,
 		BatteryRemote = dumpRemote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.BatteryController.KnitStart, 1), 1))),
 		BlockBreaker = KnitClient.Controllers.BlockBreakController.blockBreaker,
 		BlockController = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BlockEngine,
@@ -1337,7 +1338,7 @@ run(function()
 	end
 
 	bedwars.BlockController.isBlockBreakable = function(self, breakTable, plr)
-		local obj = bedwars.BlockController:getStore():getBlockAt(breakTable.blockPosition)
+		local obj = bedwars.BasicBlockStore:getBlockAt(breakTable.blockPosition)
 		if isWhitelistedBed(obj) then return false end
 		return OldBreak(self, breakTable, plr)
 	end
@@ -8750,7 +8751,7 @@ run(function()
 		end, function(thing)
 			fail = true
 		end)
-		if (not fail) and bedwars.BlockController:getStore():getBlockAt(bedwars.BlockController:getBlockPosition(pos)) then
+		if (not fail) and bedwars.BasicBlockStore:getBlockAt(bedwars.BlockController:getBlockPosition(pos)) then
 			removefunc()
 		end
 	end
