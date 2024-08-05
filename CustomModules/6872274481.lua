@@ -14,25 +14,8 @@ hook = hookmetamethod(game, "__namecall", function(obj, ...)
     return hook(obj, ...)
 end)
 
-
-local GCData = nil
-
 if not _G.gc then
     _G.gc = getgc(true)
-end
-
-for _, v in pairs(_G.gc) do
-    if type(v) == "table" then
-        for _, v2 in pairs(v) do
-            if type(v2) == "function" and not iscclosure(v2) then
-                local inf = debug.getinfo(v2)
-                if inf.short_src == 'ReplicatedStorage.rbxts_include.node_modules.@flamework.components.out' then
-                    GCData = v
-                    break
-                end
-            end
-        end
-    end
 end
 
 function requireV2(obj, targetKey)
