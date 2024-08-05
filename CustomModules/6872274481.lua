@@ -1196,7 +1196,7 @@ run(function()
 
 	local function dumpRemote(tab)
 	    for i,v in pairs(tab) do
-	        if (v:IsA("RemoteEvent") or v:IsA("RemoteFunction")) and (tab[i - 1] == "Client" or tab[i + 1] == "Client") then
+	        if typeof(v) == "Instance" and (v:IsA("RemoteEvent") or v:IsA("RemoteFunction")) and (tab[i - 1] == "Client" or tab[i + 1] == "Client") then
 	            return v
 	        end
 	    end
