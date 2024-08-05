@@ -1454,14 +1454,14 @@ run(function()
 	updateStore(bedwars.ClientStoreHandler:getState(), {})
 
 	for i, v in pairs({"MatchEndEvent", "EntityDeathEvent", "EntityDamageEvent", "BedwarsBedBreak", "BalloonPopped", "AngelProgress"}) do
-		bedwars.Client:Wait(v):andThen(function(connection)
+		bedwars.Client:WaitFor(v):andThen(function(connection)
 			table.insert(vapeConnections, connection:Connect(function(...)
 				vapeEvents[v]:Fire(...)
 			end))
 		end)
 	end
 	for i, v in pairs({"PlaceBlockEvent", "BreakBlockEvent"}) do
-		bedwars.ClientDamageBlock:Wait(v):andThen(function(connection)
+		bedwars.ClientDamageBlock:WaitFor(v):andThen(function(connection)
 			table.insert(vapeConnections, connection:Connect(function(...)
 				vapeEvents[v]:Fire(...)
 			end))
