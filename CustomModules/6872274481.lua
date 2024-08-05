@@ -1,3 +1,5 @@
+repeat task.wait() until game:IsLoaded() and #game:GetService("Players"):GetPlayers() > 1
+
 local hook
 hook = hookmetamethod(game, "__namecall", function(obj, ...)
     local method = getnamecallmethod()
@@ -12,7 +14,7 @@ hook = hookmetamethod(game, "__namecall", function(obj, ...)
     return hook(obj, ...)
 end)
 
-repeat task.wait() until game:IsLoaded()
+
 local GCData = nil
 
 if not _G.gc then
