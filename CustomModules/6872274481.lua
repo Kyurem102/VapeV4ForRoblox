@@ -2824,6 +2824,10 @@ run(function()
 	InfiniteFly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "InfiniteFly",
 		Function = function(callback)
+			local Animate = lplr.Character:FindFirstChild("Animate")
+			if Animate then			
+				Animate:Destroy()
+			end
 			if callback then
 				if not entityLibrary.isAlive then
 					disabledproper = true
