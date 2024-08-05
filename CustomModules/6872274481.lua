@@ -1148,7 +1148,23 @@ run(function()
 		task.wait()
 	until KnitGotten
 	repeat task.wait() until debug.getupvalue(KnitClient.Start, 1)
-	local Flamework = require(replicatedStorage["rbxts_include"]["node_modules"]["@flamework"].core.out).Flamework
+	local Flamework = nil
+	if not _G.gc then
+		_G.gc = getgc(true)
+	end
+	for _, v in pairs(_G.gc) do
+	    if type(v) == "table" then
+	        for _, v2 in pairs(v) do
+	            if type(v2) == "function" and not iscclosure(v2) then
+	                local inf = debug.getinfo(v2)
+	                if inf.short_src == 'ReplicatedStorage.rbxts_include.node_modules.@flamework.components.out' then
+	                    Flamework = v
+	                    break
+	                end
+	            end
+	        end
+	    end
+	end
 	local Client = require(replicatedStorage.TS.remotes).default.Client
 	local InventoryUtil = require(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
 	local OldGet = getmetatable(Client).Get
