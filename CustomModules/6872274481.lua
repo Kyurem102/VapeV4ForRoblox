@@ -477,7 +477,7 @@ end))
 
 local function getPlacedBlock(pos)
 	local roundedPosition = bedwars.BlockController:getBlockPosition(pos)
-	return bedwars.BlockEngine:getStore():getBlockAt(roundedPosition), roundedPosition
+	return bedwars.BlockController:getStore():getBlockAt(roundedPosition), roundedPosition
 end
 
 local oldpos = Vector3.zero
@@ -1338,7 +1338,7 @@ run(function()
 	end
 
 	bedwars.BlockController.isBlockBreakable = function(self, breakTable, plr)
-		local obj = bedwars.BlockEngine:getStore():getBlockAt(breakTable.blockPosition)
+		local obj = bedwars.BlockController:getStore():getBlockAt(breakTable.blockPosition)
 		if isWhitelistedBed(obj) then return false end
 		return OldBreak(self, breakTable, plr)
 	end
@@ -8751,7 +8751,7 @@ run(function()
 		end, function(thing)
 			fail = true
 		end)
-		if (not fail) and bedwars.BlockEngine:getStore():getBlockAt(bedwars.BlockController:getBlockPosition(pos)) then
+		if (not fail) and bedwars.BlockController:getStore():getBlockAt(bedwars.BlockController:getBlockPosition(pos)) then
 			removefunc()
 		end
 	end
