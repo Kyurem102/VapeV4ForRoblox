@@ -35,22 +35,28 @@ for _, v in pairs(_G.gc) do
     end
 end
 
-local MTTable = setmetatable({}, {
-    __index = function(obj, key)
-	if _G.gc then
-	    for _, v in pairs(_G.gc) do
-		if type(v) == "table" and rawget(v, key) ~= nil and (type(rawget(v, key)) == "table" or type(rawget(v, key)) == "function") then
-		    return rawget(v, key)
-		end
-	    end
-	end
-	return
-    end
-})
-
-function requireV2(obj)
+function requireV2(obj, targetKey)
     if typeof(obj) == "Instance" and obj:IsA("ModuleScript") or not obj then
-        return MTTable
+        return setmetatable({}, {
+            __index = function(obj, key)
+                if _G.gc then
+                    if targetKey then
+                        for _, v in pairs(_G.gc) do
+                            if type(v) == "table" and rawget(v, targetKey) ~= nil and (type(rawget(v, targetKey)) == "table" or type(rawget(v, targetKey)) == "function") then
+                                return v
+                            end
+                        end
+                    else
+                        for _, v in pairs(_G.gc) do
+                            if type(v) == "table" and rawget(v, key) ~= nil and (type(rawget(v, key)) == "table" or type(rawget(v, key)) == "function") then
+                                return rawget(v, key)
+                            end
+                        end
+                    end
+                end
+                return
+            end
+        })
     end
 
     return require(obj)
@@ -1294,7 +1300,7 @@ run(function()
 		QueueMeta = requireV2(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
 		ReportRemote = dumpRemote(debug.getconstants(requireV2(lplr.PlayerScripts.TS.controllers.global.report["report-controller"]).default.reportPlayer)),
 		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
-		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src),
+		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
 		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib),
 		Shop = requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
 		ShopItems = debug.getupvalue(debug.getupvalue(requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 3),
