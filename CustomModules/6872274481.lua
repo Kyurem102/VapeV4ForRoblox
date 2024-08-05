@@ -1203,9 +1203,17 @@ run(function()
 	until KnitGotten
 	repeat task.wait() until debug.getupvalue(KnitClient.Start, 1)
 	local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
-	local Client = requireV2(replicatedStorage.TS.remotes).default.Client
+	local Client = nil
+	for _, v in pairs(_G.gc) do
+	    if type(v) == "table" and (rawget(v, "default") and type(v.default) == "table") and rawget(v.default, "Client") then
+		if getmetatable(v.default.Client) then
+			Client = v.default.Client
+			break
+		end
+	    end
+	end
 	local InventoryUtil = requireV2(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
-	local OldGet = getmetatable(Client).GetEvent
+	local OldGet = getmetatable(Client).Get
 	local OldBreak
 
 	bedwars = setmetatable({
@@ -1301,7 +1309,7 @@ run(function()
 	})
 	OldBreak = bedwars.BlockController.isBlockBreakable
 
-	getmetatable(Client).GetEvent = function(self, remoteName)
+	getmetatable(Client).Get = function(self, remoteName)
 		if not vapeInjected then return OldGet(self, remoteName) end
 		local originalRemote = OldGet(self, remoteName)
 		if remoteName == bedwars.AttackRemote then
@@ -1372,7 +1380,7 @@ run(function()
 					blockPosition = blockpos
 				}
 				task.spawn(function()
-					bedwars.ClientDamageBlock:GetEvent("DamageBlock"):CallServerAsync({
+					bedwars.ClientDamageBlock:Get("DamageBlock"):CallServerAsync({
 						blockRef = blockhealthbarpos,
 						hitPosition = blockpos * 3,
 						hitNormal = Vector3.FromNormalId(normal)
@@ -1506,7 +1514,7 @@ run(function()
 
 	GuiLibrary.SelfDestructEvent.Event:Connect(function()
 		bedwars.WindWalkerController.updateJump = oldZephyrUpdate
-		getmetatable(bedwars.Client).GetEvent = OldGet
+		getmetatable(bedwars.Client).Get = OldGet
 		bedwars.BlockController.isBlockBreakable = OldBreak
 		store.blockPlacer:disable()
 	end)
@@ -2191,7 +2199,7 @@ run(function()
 							task.wait(1 + (AutoLeaveDelay.Value / 10))
 							if bedwars.ClientStoreHandler:getState().Game.customMatch == nil and bedwars.ClientStoreHandler:getState().Party.leader.userId == lplr.UserId then
 								if not AutoPlayAgain.Enabled then
-									bedwars.Client:GetEvent("TeleportToLobby"):SendToServer()
+									bedwars.Client:Get("TeleportToLobby"):SendToServer()
 								else
 									if AutoLeaveRandom.Enabled then
 										local listofmodes = {}
@@ -2214,7 +2222,7 @@ run(function()
 					leaveAttempted = true
 					if bedwars.ClientStoreHandler:getState().Game.customMatch == nil and bedwars.ClientStoreHandler:getState().Party.leader.userId == lplr.UserId then
 						if not AutoPlayAgain.Enabled then
-							bedwars.Client:GetEvent("TeleportToLobby"):SendToServer()
+							bedwars.Client:Get("TeleportToLobby"):SendToServer()
 						else
 							if bedwars.ClientStoreHandler:getState().Party.queueState == 0 then
 								if AutoLeaveRandom.Enabled then
@@ -2692,10 +2700,10 @@ run(function()
 	local GrappleExploitUp = false
 	local GrappleExploitDown = false
 	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
-	local projectileRemote = bedwars.Client:GetEvent(bedwars.ProjectileRemote)
+	local projectileRemote = bedwars.Client:Get(bedwars.ProjectileRemote)
 
 	--me when I have to fix bw code omegalol
-	bedwars.Client:GetEvent("GrapplingHookFunctions"):Connect(function(p4)
+	bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
 		if p4.hookFunction == "PLAYER_IN_TRANSIT" then
 			bedwars.CooldownController:setOnCooldown("grappling_hook", 3.5)
 		end
@@ -2706,7 +2714,7 @@ run(function()
 		Function = function(callback)
 			if callback then
 				local grappleHooked = false
-				table.insert(GrappleExploit.Connections, bedwars.Client:GetEvent("GrapplingHookFunctions"):Connect(function(p4)
+				table.insert(GrappleExploit.Connections, bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
 					if p4.hookFunction == "PLAYER_IN_TRANSIT" then
 						store.grapple = tick() + 1.8
 						grappleHooked = true
@@ -3004,7 +3012,7 @@ run(function()
 	local killauraboxes = {}
 	local killauratargetframe = {Players = {Enabled = false}}
 	local killaurasortmethod = {Value = "Distance"}
-	local killaurarealremote = bedwars.Client:GetEvent(bedwars.AttackRemote).instance
+	local killaurarealremote = bedwars.Client:Get(bedwars.AttackRemote).instance
 	local killauramethod = {Value = "Normal"}
 	local killauraothermethod = {Value = "Normal"}
 	local killauraanimmethod = {Value = "Normal"}
@@ -3705,7 +3713,7 @@ run(function()
 	local damagetimertick = 0
 	local directionvec
 	local LongJumpSpeed = {Value = 1.5}
-	local projectileRemote = bedwars.Client:GetEvent(bedwars.ProjectileRemote)
+	local projectileRemote = bedwars.Client:Get(bedwars.ProjectileRemote)
 
 	local function calculatepos(vec)
 		local returned = vec
@@ -3759,7 +3767,7 @@ run(function()
 						local damage = bedwars.BlockController:calculateBlockDamage(lplr, {
 							blockPosition = pos2
 						})
-						bedwars.Client:GetEvent(bedwars.CannonAimRemote):SendToServer({
+						bedwars.Client:Get(bedwars.CannonAimRemote):SendToServer({
 							cannonBlockPos = pos2,
 							lookVector = vec
 						})
@@ -3772,7 +3780,7 @@ run(function()
 						end
 						task.delay(broken, function()
 							for i = 1, 3 do
-								local call = bedwars.Client:GetEvent(bedwars.CannonLaunchRemote):CallServer({cannonBlockPos = bedwars.BlockController:getBlockPosition(block.Position)})
+								local call = bedwars.Client:Get(bedwars.CannonLaunchRemote):CallServer({cannonBlockPos = bedwars.BlockController:getBlockPosition(block.Position)})
 								if call then
 									bedwars.breakBlock(block.Position, true, getBestBreakSide(block.Position), true, true)
 									task.delay(0.1, function()
@@ -3997,7 +4005,7 @@ run(function()
 		Name = "NoFall",
 		Function = function(callback)
 			if callback then
-				bedwars.Client:GetEvent("GroundHit"):SendToServer()
+				bedwars.Client:Get("GroundHit"):SendToServer()
 			end
 		end,
 		HoverText = "Prevents taking fall damage."
@@ -6476,7 +6484,7 @@ run(function()
 		Name = "AntiAFK",
 		Function = function(callback)
 			if callback then
-				bedwars.Client:GetEvent("AfkInfo"):SendToServer({
+				bedwars.Client:Get("AfkInfo"):SendToServer({
 					afk = false
 				})
 			end
@@ -6681,7 +6689,7 @@ run(function()
 	local function buyItem(itemtab, waitdelay)
 		if not id then return end
 		local res
-		bedwars.Client:GetEvent("BedwarsPurchaseItem"):CallServerAsync({
+		bedwars.Client:Get("BedwarsPurchaseItem"):CallServerAsync({
 			shopItem = itemtab,
 			shopId = id
 		}):andThen(function(p11)
@@ -6900,14 +6908,14 @@ run(function()
 				local pot = getItem("heal_splash_potion")
 				if (item or pot) and AutoConsumeDelay <= tick() then
 					if item then
-						bedwars.Client:GetEvent(bedwars.EatRemote):CallServerAsync({
+						bedwars.Client:Get(bedwars.EatRemote):CallServerAsync({
 							item = item.tool
 						})
 						AutoConsumeDelay = tick() + 0.6
 					else
 						local newray = workspace:Raycast((oldcloneroot or entityLibrary.character.HumanoidRootPart).Position, Vector3.new(0, -76, 0), store.blockRaycast)
 						if newray ~= nil then
-							bedwars.Client:GetEvent(bedwars.ProjectileRemote):CallServerAsync(pot.tool, "heal_splash_potion", "heal_splash_potion", (oldcloneroot or entityLibrary.character.HumanoidRootPart).Position, (oldcloneroot or entityLibrary.character.HumanoidRootPart).Position, Vector3.new(0, -70, 0), game:GetService("HttpService"):GenerateGUID(), {drawDurationSeconds = 1})
+							bedwars.Client:Get(bedwars.ProjectileRemote):CallServerAsync(pot.tool, "heal_splash_potion", "heal_splash_potion", (oldcloneroot or entityLibrary.character.HumanoidRootPart).Position, (oldcloneroot or entityLibrary.character.HumanoidRootPart).Position, Vector3.new(0, -70, 0), game:GetService("HttpService"):GenerateGUID(), {drawDurationSeconds = 1})
 						end
 					end
 				end
@@ -6915,14 +6923,14 @@ run(function()
 				autobankapple = false
 			end
 			if speedpotion and (not lplr.Character:GetAttribute("StatusEffect_speed")) and AutoConsumeSpeed.Enabled then
-				bedwars.Client:GetEvent(bedwars.EatRemote):CallServerAsync({
+				bedwars.Client:Get(bedwars.EatRemote):CallServerAsync({
 					item = speedpotion.tool
 				})
 			end
 			if lplr.Character:GetAttribute("Shield_POTION") and ((not lplr.Character:GetAttribute("Shield_POTION")) or lplr.Character:GetAttribute("Shield_POTION") == 0) then
 				local shield = getItem("big_shield") or getItem("mini_shield")
 				if shield then
-					bedwars.Client:GetEvent(bedwars.EatRemote):CallServerAsync({
+					bedwars.Client:Get(bedwars.EatRemote):CallServerAsync({
 						item = shield.tool
 					})
 				end
@@ -7144,7 +7152,7 @@ run(function()
 									if getItem("guitar") then
 										local plr = GetTeammateThatNeedsMost()
 										if plr and healtick <= tick() then
-											bedwars.Client:GetEvent(bedwars.GuitarHealRemote):SendToServer({
+											bedwars.Client:Get(bedwars.GuitarHealRemote):SendToServer({
 												healTarget = plr.Character
 											})
 											healtick = tick() + 2
@@ -7159,7 +7167,7 @@ run(function()
 									local itemdrops = collectionService:GetTagged("treeOrb")
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and v:FindFirstChild("Spirit") and (entityLibrary.character.HumanoidRootPart.Position - v.Spirit.Position).magnitude <= 20 then
-											if bedwars.Client:GetEvent(bedwars.TreeRemote):CallServer({
+											if bedwars.Client:Get(bedwars.TreeRemote):CallServer({
 												treeOrbSecret = v:GetAttribute("TreeOrbSecret")
 											}) then
 												v:Destroy()
@@ -7176,7 +7184,7 @@ run(function()
 									local itemdrops = collectionService:GetTagged("hidden-metal")
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and v.PrimaryPart and (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude <= 20 then
-											bedwars.Client:GetEvent(bedwars.PickupMetalRemote):SendToServer({
+											bedwars.Client:Get(bedwars.PickupMetalRemote):SendToServer({
 												id = v:GetAttribute("Id")
 											})
 										end
@@ -7190,7 +7198,7 @@ run(function()
 									local itemdrops = bedwars.BatteryEffectsController.liveBatteries
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and (entityLibrary.character.HumanoidRootPart.Position - v.position).magnitude <= 10 then
-											bedwars.Client:GetEvent(bedwars.BatteryRemote):SendToServer({
+											bedwars.Client:Get(bedwars.BatteryRemote):SendToServer({
 												batteryId = i
 											})
 										end
@@ -7204,7 +7212,7 @@ run(function()
 									local itemdrops = bedwars.GrimReaperController.soulsByPosition
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and lplr.Character:GetAttribute("Health") <= (lplr.Character:GetAttribute("MaxHealth") / 4) and v.PrimaryPart and (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude <= 120 and (not lplr.Character:GetAttribute("GrimReaperChannel")) then
-											bedwars.Client:GetEvent(bedwars.ConsumeSoulRemote):CallServer({
+											bedwars.Client:Get(bedwars.ConsumeSoulRemote):CallServer({
 												secret = v:GetAttribute("GrimReaperSoulSecret")
 											})
 											v:Destroy()
@@ -7219,7 +7227,7 @@ run(function()
 									local itemdrops = collectionService:GetTagged("HarvestableCrop")
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and (entityLibrary.character.HumanoidRootPart.Position - v.Position).magnitude <= 10 then
-											bedwars.Client:GetEvent("CropHarvest"):CallServerAsync({
+											bedwars.Client:Get("CropHarvest"):CallServerAsync({
 												position = bedwars.BlockController:getBlockPosition(v.Position)
 											}):andThen(function(suc)
 												if suc then
@@ -7238,7 +7246,7 @@ run(function()
 									local itemdrops = collectionService:GetTagged(lplr.Name..':pinata')
 									for i,v in pairs(itemdrops) do
 										if entityLibrary.isAlive and getItem('candy') then
-											bedwars.Client:GetEvent(bedwars.PinataRemote):CallServer(v)
+											bedwars.Client:Get(bedwars.PinataRemote):CallServer(v)
 										end
 									end
 								until (not AutoKit.Enabled)
@@ -7255,7 +7263,7 @@ run(function()
 												local punchCFrame = CFrame.new(localPos, (i:GetPrimaryPartCFrame().Position * Vector3.new(1, 0, 1)) + Vector3.new(0, localPos.Y, 0))
 												lplr.Character:SetPrimaryPartCFrame(punchCFrame)
 												bedwars.DragonSlayerController:playPunchAnimation(punchCFrame - punchCFrame.Position)
-												bedwars.Client:GetEvent(bedwars.DragonRemote):SendToServer({
+												bedwars.Client:Get(bedwars.DragonRemote):SendToServer({
 													target = i
 												})
 											end
@@ -7271,7 +7279,7 @@ run(function()
 										for i, v in pairs(collectionService:GetTagged("TomeGuidingBeam")) do
 											local obj = v.Parent and v.Parent.Parent and v.Parent.Parent.Parent
 											if obj and (entityLibrary.character.HumanoidRootPart.Position - obj.PrimaryPart.Position).Magnitude < 5 and obj:GetAttribute("TomeSecret") then
-												local res = bedwars.Client:GetEvent(bedwars.MageRemote):CallServer({
+												local res = bedwars.Client:Get(bedwars.MageRemote):CallServer({
 													secret = obj:GetAttribute("TomeSecret")
 												})
 												if res.success and res.element then
@@ -7300,7 +7308,7 @@ run(function()
 								task.wait(0.5)
 								if not AutoKit.Enabled then return end
 								if bedwars.ClientStoreHandler:getState().Kit.angelProgress >= 1 and lplr.Character:GetAttribute("AngelType") == nil then
-									bedwars.Client:GetEvent(bedwars.TrinityRemote):SendToServer({
+									bedwars.Client:Get(bedwars.TrinityRemote):SendToServer({
 										angel = AutoKitTrinity.Value
 									})
 								end
@@ -7311,7 +7319,7 @@ run(function()
 									task.wait(0.1)
 									if entityLibrary.isAlive then
 										for i,v in pairs(collectionService:GetTagged("petrified-player")) do
-											bedwars.Client:GetEvent(bedwars.MinerRemote):SendToServer({
+											bedwars.Client:Get(bedwars.MinerRemote):SendToServer({
 												petrifyId = v:GetAttribute("PetrifyId")
 											})
 										end
@@ -7355,7 +7363,7 @@ run(function()
 					end
 					warningNotification("AutoForge", "Purchasing "..forgeType..".", bedwars.ForgeUtil.FORGE_DURATION_SEC)
 				end
-				bedwars.Client:GetEvent("ForgePurchaseUpgrade"):SendToServer(i)
+				bedwars.Client:Get("ForgePurchaseUpgrade"):SendToServer(i)
 				task.wait(bedwars.ForgeUtil.FORGE_DURATION_SEC + 0.2)
 			end
 		end
@@ -7432,7 +7440,7 @@ run(function()
 							if v ~= lplr and alreadyreportedlist[v] == nil and v:GetAttribute("PlayerConnected") and whitelist:get(v) == 0 then
 								task.wait(1)
 								alreadyreportedlist[v] = true
-								bedwars.Client:GetEvent(bedwars.ReportRemote):SendToServer(v.UserId)
+								bedwars.Client:Get(bedwars.ReportRemote):SendToServer(v.UserId)
 								store.statistics.reported = store.statistics.reported + 1
 								if AutoReportV2Notify.Enabled then
 									warningNotification("AutoReportV2", "Reported "..v.Name, 15)
@@ -7765,7 +7773,7 @@ run(function()
 							task.spawn(function()
 								pcall(function()
 									cheststealerdelays[v3] = tick() + 0.2
-									bedwars.Client:GetNamespace("Inventory"):GetEvent("ChestGetItem"):CallServer(chest.Value, v3)
+									bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(chest.Value, v3)
 								end)
 							end)
 							task.wait(ChestStealerDelay.Value / 100)
@@ -7781,18 +7789,18 @@ run(function()
 					chest = chest and chest.Value or nil
 					local chestitems = chest and chest:GetChildren() or {}
 					if #chestitems > 0 then
-						bedwars.Client:GetNamespace("Inventory"):GetEvent("SetObservedChest"):SendToServer(chest)
+						bedwars.Client:GetNamespace("Inventory"):Get("SetObservedChest"):SendToServer(chest)
 						for i3,v3 in pairs(chestitems) do
 							if v3:IsA("Accessory") then
 								task.spawn(function()
 									pcall(function()
-										bedwars.Client:GetNamespace("Inventory"):GetEvent("ChestGetItem"):CallServer(v.ChestFolderValue.Value, v3)
+										bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(v.ChestFolderValue.Value, v3)
 									end)
 								end)
 								task.wait(ChestStealerDelay.Value / 100)
 							end
 						end
-						bedwars.Client:GetNamespace("Inventory"):GetEvent("SetObservedChest"):SendToServer(nil)
+						bedwars.Client:GetNamespace("Inventory"):Get("SetObservedChest"):SendToServer(nil)
 					end
 				end
 			end
@@ -7930,7 +7938,7 @@ run(function()
 								if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - v.Position).magnitude <= PickupRangeRange.Value and (pickedup[v] == nil or pickedup[v] <= tick()) then
 									task.spawn(function()
 										pickedup[v] = tick() + 0.2
-										bedwars.Client:GetEvent(bedwars.PickupRemote):CallServerAsync({
+										bedwars.Client:Get(bedwars.PickupRemote):CallServerAsync({
 											itemDrop = v
 										}):andThen(function(suc)
 											if suc then
@@ -8052,7 +8060,7 @@ run(function()
 					if getItem("raven") then
 						local plr = EntityNearMouse(1000)
 						if plr then
-							local projectile = bedwars.Client:GetEvent(bedwars.SpawnRavenRemote):CallServerAsync():andThen(function(projectile)
+							local projectile = bedwars.Client:Get(bedwars.SpawnRavenRemote):CallServerAsync():andThen(function(projectile)
 								if projectile then
 									local projectilemodel = projectile
 									if not projectilemodel then
@@ -8731,7 +8739,7 @@ run(function()
 	local function schemplaceblock(pos, blocktype, removefunc)
 		local fail = false
 		local ok = bedwars.RuntimeLib.try(function()
-			bedwars.ClientDamageBlock:GetEvent("PlaceBlock"):CallServer({
+			bedwars.ClientDamageBlock:Get("PlaceBlock"):CallServer({
 				blockType = blocktype or getWool(),
 				position = bedwars.BlockController:getBlockPosition(pos)
 			})
@@ -8888,7 +8896,7 @@ run(function()
 						task.wait()
 						local item = getItemNear("scythe")
 						if item and lplr.Character.HandInvItem.Value == item.tool and bedwars.CombatController then
-							bedwars.Client:GetEvent("ScytheDash"):SendToServer({direction = Vector3.new(9e9, 9e9, 9e9)})
+							bedwars.Client:Get("ScytheDash"):SendToServer({direction = Vector3.new(9e9, 9e9, 9e9)})
 							if entityLibrary.isAlive and entityLibrary.character.Head.Transparency ~= 0 then
 								store.scythe = tick() + 1
 							end
