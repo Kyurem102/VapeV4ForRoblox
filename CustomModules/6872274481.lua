@@ -1196,12 +1196,13 @@ run(function()
 
 	local function dumpRemote(tab)
 	    for i,v in pairs(tab) do
-	        if typeof(v) == "Instance" and (v:IsA("RemoteEvent") or v:IsA("RemoteFunction")) and (tab[i - 1] == "Client" or tab[i + 1] == "Client") then
-	            return v
+	        if v == "Client" then
+	            return tab[i + 1]
 	        end
 	    end
 	    return ""
 	end
+
 
 	local KnitGotten, KnitClient
 	repeat
@@ -1214,12 +1215,18 @@ run(function()
 	repeat task.wait() until debug.getupvalue(KnitClient.Start, 1)
 	local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	local Client = nil
+	local ReportRemote = nil
 	for _, v in pairs(_G.gc) do
 	    if type(v) == "table" and (rawget(v, "default") and type(v.default) == "table") and rawget(v.default, "Client") then
-		if getmetatable(v.default.Client) then
-			Client = v.default.Client
-			break
-		end
+	        if getmetatable(v.default.Client) then
+	            Client = v.default.Client
+	            break
+	        end
+	    end
+	end
+	for _, v in pairs(_G.gc) do
+	    if type(v) == "table" and (rawget(v, "default") and type(v.default) == "table") and rawget(v.default, "reportPlayer") then
+	        ReportRemote = dumpRemote(debug.getconstants(v.default.reportPlayer))
 	    end
 	end
 	local InventoryUtil = requireV2(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
@@ -1298,8 +1305,8 @@ run(function()
 		QueryUtil = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
 		QueueCard = requireV2(lplr.PlayerScripts.TS.controllers.global.queue.ui["queue-card"]).QueueCard,
 		QueueMeta = requireV2(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
-		ReportRemote = dumpRemote(debug.getconstants(requireV2(lplr.PlayerScripts.TS.controllers.global.report["report-controller"]).default.reportPlayer)),
-		--ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
+		ReportRemote = ReportRemote,
+		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
 		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
 		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
 		Shop = requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
