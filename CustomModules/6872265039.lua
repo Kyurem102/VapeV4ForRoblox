@@ -275,7 +275,7 @@ runcode(function()
     getfunctions = function()
         local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	repeat task.wait() until Flamework.isInitialized
-        local KnitClient = debug.getupvalue(requireV2(lplr.PlayerScripts.TS.knit).setup, 6)
+        local KnitClient = requireV2().KnitClient
         local Client = requireV2(repstorage.TS.remotes).default.Client
         local OldClientGet = getmetatable(Client).Get
 		local OldClientWaitFor = getmetatable(Client).WaitFor
