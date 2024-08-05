@@ -1,2 +1,2 @@
 # Vape V4
-rewrite soon :tm:
+Ban Wave Bypass Attempt
