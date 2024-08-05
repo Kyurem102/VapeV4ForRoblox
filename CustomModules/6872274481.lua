@@ -1196,7 +1196,7 @@ run(function()
 	local KnitGotten, KnitClient
 	repeat
 		KnitGotten, KnitClient = pcall(function()
-			return debug.getupvalue(requireV2(lplr.PlayerScripts.TS.knit).setup, 6)
+			return requireV2().KnitClient
 		end)
 		if KnitGotten then break end
 		task.wait()
