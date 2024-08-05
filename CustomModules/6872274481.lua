@@ -1,3 +1,17 @@
+local hook
+hook = hookmetamethod(game, "__namecall", function(obj, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    
+    if not checkcaller() then
+        if method == "FireServer" and type(args[1]) == "table" and rawget(args[1], "report") then
+            return
+        end
+    end
+
+    return hook(obj, ...)
+end)
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -103,7 +117,7 @@ end
 
 local function vapeGithubRequest(scripturl)
 	if not isfile("vape/"..scripturl) then
-		local suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/"..readfile("vape/commithash.txt").."/"..scripturl, true) end)
+		local suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/Kyurem102/VapeV4ForRoblox/"..readfile("vape/commithash.txt").."/"..scripturl, true) end)
 		assert(suc, res)
 		assert(res ~= "404: Not Found", res)
 		if scripturl:find(".lua") then res = "--This watermark is used to delete the file if its cached, remove it to make the file persist after commits.\n"..res end
