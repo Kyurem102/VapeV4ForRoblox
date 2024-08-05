@@ -37,8 +37,8 @@ function requireV2(obj)
     if typeof(obj) == "Instance" and obj:IsA("ModuleScript") then
         return setmetatable({}, {
             __index = function(obj, key)
-                if GCData then
-                    for _, v in pairs(GCData) do
+                if _G.gc then
+                    for _, v in pairs(_G.gc) do
                         if type(v) == "table" and rawget(v, key) then
                             return v[key]
                         end
