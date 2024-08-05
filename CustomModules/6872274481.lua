@@ -1182,7 +1182,7 @@ run(function()
 	if Flamework then
 	    for _, v in pairs(Flamework) do
 	        if type(v) == "table" and rawget(v, "Flamework") and rawget(v.Flamework, "resolveDependency") then
-	            Flamework = v
+	            Flamework = v.Flamework
 	            break
 	        end
 	    end
