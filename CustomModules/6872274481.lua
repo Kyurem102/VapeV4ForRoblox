@@ -1301,7 +1301,7 @@ run(function()
 		ReportRemote = dumpRemote(debug.getconstants(requireV2(lplr.PlayerScripts.TS.controllers.global.report["report-controller"]).default.reportPlayer)),
 		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
 		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
-		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib),
+		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
 		Shop = requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
 		ShopItems = debug.getupvalue(debug.getupvalue(requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 3),
 		SoundList = requireV2(replicatedStorage.TS.sound["game-sound"]).GameSound,
