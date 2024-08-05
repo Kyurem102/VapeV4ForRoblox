@@ -1190,7 +1190,7 @@ run(function()
 	local KnitGotten, KnitClient
 	repeat
 		KnitGotten, KnitClient = pcall(function()
-			return require().KnitClient
+			return requireV2().KnitClient
 		end)
 		if KnitGotten then break end
 		task.wait()
@@ -1291,8 +1291,8 @@ run(function()
 		QueueMeta = require(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
 		ReportRemote = ReportRemote,
 		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
-		Roact = require(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
-		RuntimeLib = require(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
+		Roact = require(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src),
+		RuntimeLib = require(replicatedStorage["rbxts_include"].RuntimeLib),
 		Shop = require(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
 		ShopItems = debug.getupvalue(debug.getupvalue(require(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 3),
 		SoundList = require(replicatedStorage.TS.sound["game-sound"]).GameSound,
