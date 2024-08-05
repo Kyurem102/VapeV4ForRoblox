@@ -1196,7 +1196,7 @@ run(function()
 		task.wait()
 	until KnitGotten
 	repeat task.wait() until debug.getupvalue(KnitClient.Start, 1)
-	local Flamework = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
+	local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	local Client = nil
 	local ReportRemote = nil
 	for _, v in pairs(_G.gc) do
