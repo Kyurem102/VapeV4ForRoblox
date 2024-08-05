@@ -39,7 +39,7 @@ local MTTable = setmetatable({}, {
     __index = function(obj, key)
 	if _G.gc then
 	    for _, v in pairs(_G.gc) do
-		if type(v) == "table" and rawget(v, key) ~= nil and type(rawget(v, key)) == "table" then
+		if type(v) == "table" and rawget(v, key) ~= nil and (type(rawget(v, key)) == "table" or type(rawget(v, key)) == "function") then
 		    return rawget(v, key)
 		end
 	    end
