@@ -1299,7 +1299,7 @@ run(function()
 		QueueCard = requireV2(lplr.PlayerScripts.TS.controllers.global.queue.ui["queue-card"]).QueueCard,
 		QueueMeta = requireV2(replicatedStorage.TS.game["queue-meta"]).QueueMeta,
 		ReportRemote = dumpRemote(debug.getconstants(requireV2(lplr.PlayerScripts.TS.controllers.global.report["report-controller"]).default.reportPlayer)),
-		ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
+		--ResetRemote = dumpRemote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
 		Roact = requireV2(replicatedStorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src, "createElement"),
 		RuntimeLib = requireV2(replicatedStorage["rbxts_include"].RuntimeLib, "await"),
 		Shop = requireV2(replicatedStorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
