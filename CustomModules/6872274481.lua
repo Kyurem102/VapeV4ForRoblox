@@ -1205,7 +1205,7 @@ run(function()
 	local Flamework = requireV2(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@flamework"].components.out).Flamework
 	local Client = requireV2(replicatedStorage.TS.remotes).default.Client
 	local InventoryUtil = requireV2(replicatedStorage.TS.inventory["inventory-util"]).InventoryUtil
-	local OldGet = getmetatable(Client).Get
+	local OldGet = getmetatable(Client).Event
 	local OldBreak
 
 	bedwars = setmetatable({
@@ -1301,7 +1301,7 @@ run(function()
 	})
 	OldBreak = bedwars.BlockController.isBlockBreakable
 
-	getmetatable(Client).Get = function(self, remoteName)
+	getmetatable(Client).Event = function(self, remoteName)
 		if not vapeInjected then return OldGet(self, remoteName) end
 		local originalRemote = OldGet(self, remoteName)
 		if remoteName == bedwars.AttackRemote then
@@ -1454,14 +1454,14 @@ run(function()
 	updateStore(bedwars.ClientStoreHandler:getState(), {})
 
 	for i, v in pairs({"MatchEndEvent", "EntityDeathEvent", "EntityDamageEvent", "BedwarsBedBreak", "BalloonPopped", "AngelProgress"}) do
-		bedwars.Client:WaitFor(v):andThen(function(connection)
+		bedwars.Client:Wait(v):andThen(function(connection)
 			table.insert(vapeConnections, connection:Connect(function(...)
 				vapeEvents[v]:Fire(...)
 			end))
 		end)
 	end
 	for i, v in pairs({"PlaceBlockEvent", "BreakBlockEvent"}) do
-		bedwars.ClientDamageBlock:WaitFor(v):andThen(function(connection)
+		bedwars.ClientDamageBlock:Wait(v):andThen(function(connection)
 			table.insert(vapeConnections, connection:Connect(function(...)
 				vapeEvents[v]:Fire(...)
 			end))
