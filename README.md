@@ -1,2 +1,2 @@
 # Vape V4
-Ban Wave Bypass Attempt
+Edited to attempt bypassing ban wave for Bedwars Roblox
