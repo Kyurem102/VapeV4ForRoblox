@@ -16,7 +16,7 @@ local isfile = isfile or function(file)
 	return suc and res ~= nil
 end
 local setidentity = syn and syn.set_thread_identity or set_thread_identity or setidentity or setthreadidentity or function() end
-local getidentity = syn and syn.get_thread_identity or get_thread_identity or getidentity or getthreadidentity or function() return 0 end
+local getidentity = syn and syn.get_thread_identity or get_thread_identity or getidentity or getthreadidentity or function() return 7 end
 local vapeAssetTable = {
 	["vape/assets/AddItem.png"] = "rbxassetid://13350763121",
 	["vape/assets/AddRemoveIcon1.png"] = "rbxassetid://13350764147",
@@ -100,7 +100,7 @@ local delfile = delfile or function(file) writefile(file, "") end
 
 local function displayErrorPopup(text, funclist)
 	local oldidentity = getidentity()
-	setidentity(8)
+	setidentity(7)
 	local ErrorPrompt = getrenv().require(game:GetService("CoreGui").RobloxGui.Modules.ErrorPrompt)
 	local prompt = ErrorPrompt.new("Default")
 	prompt._hideErrorCode = true
